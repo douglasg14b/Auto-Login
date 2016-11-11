@@ -1,0 +1,231 @@
+﻿<Window x:Class="Auto_Login.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        DataContext="{StaticResource AutoLoginViewModel}"
+        Activated="WindowActivated"
+        Title="MainWindow"
+        Height="451"
+        Width="568">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.3*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Please Enter Your E-Mail and Password"
+                   Grid.ColumnSpan="3"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="18" />
+
+        <StackPanel Grid.Row="1"
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal">
+            <GroupBox x:Name="Credentials_GroupBox"
+                      Grid.Row="1"
+                      Grid.RowSpan="3"
+                      Grid.ColumnSpan="3"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <GroupBox.Header>
+                    <Label FontWeight="Bold"
+                           FontSize="16">
+                        Login Credentials
+                    </Label>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.75*" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="22" />
+                        <RowDefinition MinHeight="22" />
+                        <RowDefinition MinHeight="22" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Username:"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Margin="5" />
+                    <StackPanel Grid.Column="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBox x:Name="Username_TextBox"
+                                 Width="125"
+                                 Margin="5,0"
+                                 Grid.Column="1"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Text="{Binding Username}"
+                                 Height="22" />
+                        <TextBlock VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   FontSize="14">
+                        @
+                        </TextBlock>
+                        <ComboBox x:Name="Domain_ComboBox"
+                                  SelectedIndex="{Binding CurrentDomainIndex}"
+                                  Margin="5,0"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  FontSize="14"
+                                  ItemsSource="{Binding Domains}" />
+
+                    </StackPanel>
+
+                    <TextBlock Text="Password:"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Margin="5,0"
+                               Grid.Row="1" />
+                    <PasswordBox x:Name="Password_Textbox"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Center"
+                                 Width="125"
+                                 Margin="5,0"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Height="22"></PasswordBox>
+                    <TextBlock VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               FontSize="14"
+                               Grid.Row="3"
+                               FontWeight="Bold"
+                               Margin="5,0">
+                    Remember:
+                    </TextBlock>
+                    <StackPanel Grid.Row="3"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Margin="5,0"
+                                Orientation="Horizontal">
+                        <CheckBox FontSize="14"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Margin="5,0"
+                                  IsChecked="{Binding RememberUsername}">
+                            Username
+                        </CheckBox>
+                        <CheckBox FontSize="14"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Margin="5,0"
+                                  IsChecked="{Binding RememberDomains}">
+                            Domain
+                        </CheckBox>
+                    </StackPanel>
+
+                </Grid>
+            </GroupBox>
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <CheckBox VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Margin="5"
+                          FontSize="14"
+                          IsChecked="{Binding OpenHipChatApp}">
+                    Open HipChat App
+                </CheckBox>
+                <Button Margin="25,10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Content="Login"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Click="Button_Click">
+
+                </Button>
+            </StackPanel>
+
+        </StackPanel>
+
+        <GroupBox Grid.Row="5"
+                  Grid.ColumnSpan="3"
+                  VerticalAlignment="Top"
+                  HorizontalAlignment="Left">
+            <GroupBox.Header>
+                <Label FontWeight="Bold"
+                       FontSize="16">
+                    Sites
+                </Label>
+            </GroupBox.Header>
+            <DataGrid ItemsSource="{Binding}"
+                      DataContext="{Binding Websites}"
+                      AutoGenerateColumns="False"
+                      FontSize="14"
+                      VerticalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      IsSynchronizedWithCurrentItem="True">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick"
+                                     Handler="EditWebsiteRow" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.CellStyle>
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding WebsiteName}"
+                                        ClipboardContentBinding="{x:Null}"
+                                        Header="Website"
+                                        MinWidth="100"
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding WebsiteAddress}"
+                                        ClipboardContentBinding="{x:Null}"
+                                        Header="Address"
+                                        IsReadOnly="True"
+                                        MaxWidth="200" />
+                    <DataGridCheckBoxColumn Binding="{Binding LoginToSite}"
+                                            ClipboardContentBinding="{x:Null}"
+                                            Header="Log In" />
+                    <DataGridTextColumn Binding="{Binding Username}"
+                                        ClipboardContentBinding="{x:Null}"
+                                        Header="Username"
+                                        IsReadOnly="True" />
+                    <DataGridCheckBoxColumn Binding="{Binding UsesUniquePassword}"
+                                            ClipboardContentBinding="{x:Null}"
+                                            Header="Unique Pass." />
+                    <!--<DataGridTemplateColumn Header="Edit">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Click="EditWebsite">
+                                    Edit
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>-->
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+    </Grid>
+</Window>
